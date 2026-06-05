@@ -1,0 +1,50 @@
+# kuafu 示例配置
+crawl:
+  name: "example-crawl"
+  seeds:
+    - "https://example.com"
+  max_depth: 3
+  max_pages: 1000
+
+scheduler:
+  type: "bfs"
+  batch_size: 50
+
+fetcher:
+  user_agent: "kuafu/1.0"
+  timeout: 30.0
+  max_redirects: 10
+  http2: true
+  retry:
+    max_retries: 3
+    retry_on_status: [408, 429, 500, 502, 503, 504]
+
+politeness:
+  default_delay: 1.0
+  max_concurrent_per_host: 2
+  circuit_threshold: 5
+  circuit_cooldown: 60.0
+
+parser:
+  extract_links: true
+  follow_nofollow: false
+
+dedup:
+  url:
+    type: "bloom"
+    bloom:
+      expected_items: 1000000
+      false_positive_rate: 0.01
+
+storage:
+  url_store_type: "memory"
+
+worker:
+  concurrency: 10
+
+log:
+  level: "info"
+  format: "console"
+
+pipeline:
+  - type: "console"

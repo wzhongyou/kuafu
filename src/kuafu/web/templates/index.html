@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}kuafu Dashboard{% endblock %}
+{% block content %}
+
+<!-- 爬取表单 -->
+<section class="card">
+    <h2>Start Crawl</h2>
+    <form id="crawl-form" onsubmit="startCrawl(event)">
+        <div class="form-row">
+            <input type="url" id="seed-url" name="url" placeholder="https://example.com" required class="input-url">
+            <input type="number" id="max-depth" name="max_depth" value="2" min="0" class="input-sm" title="Max Depth">
+            <input type="number" id="max-pages" name="max_pages" value="100" min="1" class="input-sm" title="Max Pages">
+            <button type="submit" id="start-btn" class="btn btn-primary">Start</button>
+        </div>
+    </form>
+</section>
+
+<!-- 状态面板 -->
+<section class="card" id="status-panel" style="display:none;">
+    <div class="status-header">
+        <span id="state-indicator" class="state-dot"></span>
+        <span id="state-text">Idle</span>
+        <span class="elapsed" id="elapsed">0s</span>
+    </div>
+    <div class="counters">
+        <div class="counter">
+            <span class="counter-value" id="pages-crawled">0</span>
+            <span class="counter-label">Crawled</span>
+        </div>
+        <div class="counter">
+            <span class="counter-value counter-fail" id="pages-failed">0</span>
+            <span class="counter-label">Failed</span>
+        </div>
+        <div class="counter">
+            <span class="counter-value" id="urls-discovered">0</span>
+            <span class="counter-label">Discovered</span>
+        </div>
+    </div>
+    <div class="controls">
+        <button id="pause-btn" class="btn" onclick="controlCrawl('pause')">Pause</button>
+        <button id="resume-btn" class="btn" onclick="controlCrawl('resume')" style="display:none;">Resume</button>
+        <button id="stop-btn" class="btn btn-danger" onclick="controlCrawl('stop')">Stop</button>
+    </div>
+</section>
+
+<!-- 操作区 -->
+<section class="card" id="actions-panel" style="display:none;">
+    <h2>Actions</h2>
+    <div class="actions-row">
+        <button class="btn" onclick="exportJsonl()">Export JSONL</button>
+        <div class="vortex-row">
+            <input type="url" id="vortex-url" placeholder="http://localhost:9090" class="input-sm">
+            <button class="btn btn-primary" onclick="buildIndex()">Build Vortex Index</button>
+        </div>
+    </div>
+    <div id="index-result" class="result-msg" style="display:none;"></div>
+</section>
+
+<!-- 结果表格 -->
+<section class="card">
+    <h2>Results <span id="result-count" class="badge">0</span></h2>
+    <table id="results-table">
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>URL</th>
+                <th>Title</th>
+                <th>Duration</th>
+            </tr>
+        </thead>
+        <tbody id="results-body"></tbody>
+    </table>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/main.js"></script>
+{% endblock %}

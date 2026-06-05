@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ result.parse.title or result.fetch.url }} - kuafu{% endblock %}
+{% block content %}
+
+<a href="/" class="back-link">Back to Dashboard</a>
+
+<section class="card">
+    <h1>{{ result.parse.title or "Untitled" }}</h1>
+    <dl class="meta-grid">
+        <dt>URL</dt>
+        <dd><a href="{{ result.fetch.url }}" target="_blank">{{ result.fetch.url }}</a></dd>
+        <dt>Status</dt>
+        <dd>{{ result.fetch.status_code }}</dd>
+        <dt>Content Type</dt>
+        <dd>{{ result.fetch.content_type }}</dd>
+        <dt>Duration</dt>
+        <dd>{{ "%.2f"|format(result.fetch.duration) }}s</dd>
+        <dt>Depth</dt>
+        <dd>{{ result.url_item.depth if result.url_item else 0 }}</dd>
+        {% if result.parse.language %}
+        <dt>Language</dt>
+        <dd>{{ result.parse.language }}</dd>
+        {% endif %}
+    </dl>
+</section>
+
+<section class="card">
+    <h2>Page Text</h2>
+    <pre class="page-text" id="page-text">{{ result.parse.text[:3000] }}</pre>
+    {% if result.parse.text|length > 3000 %}
+    <button class="btn" onclick="document.getElementById('page-text').textContent={{ result.parse.text|e }}; this.style.display='none';">Show Full Text</button>
+    {% endif %}
+</section>
+
+<section class="card">
+    <h2>Links ({{ result.parse.links|length }})</h2>
+    <ul class="link-list">
+    {% for link in result.parse.links %}
+        <li><a href="{{ link.url }}" target="_blank">{{ link.text or link.url }}</a></li>
+    {% endfor %}
+    </ul>
+</section>
+
+<section class="card">
+    <h2>Meta Tags</h2>
+    <dl class="meta-grid">
+    {% for key, value in result.parse.meta.items() %}
+        <dt>{{ key }}</dt>
+        <dd>{{ value }}</dd>
+    {% endfor %}
+    </dl>
+</section>
+
+{% endblock %}

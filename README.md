@@ -45,7 +45,7 @@ kuafu -s https://example.com
 kuafu -s https://example.com -d 3 -n 1000
 
 # 使用配置文件
-kuafu -c configs/kuafu.yaml
+kuafu -c conf/kuafu.yaml
 
 # 输出到文件
 kuafu -s https://example.com -o ./output/

@@ -591,7 +591,7 @@ crawl:
 kuafu -s https://example.com -d 3 -n 100
 
 # 配置文件
-kuafu -c configs/kuafu.yaml
+kuafu -c conf/kuafu.yaml
 
 # TUI 交互模式
 kuafu --tui

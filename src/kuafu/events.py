@@ -45,7 +45,8 @@ class EventEmitter:
         """发射事件（非阻塞，fire-and-forget）"""
         for callback in self._listeners.get(event, []):
             try:
-                asyncio.get_event_loop().create_task(callback(**kwargs))
+                loop = asyncio.get_running_loop()
+                loop.create_task(callback(**kwargs))
             except RuntimeError:
                 # 事件循环未运行时忽略（如测试环境）
                 pass

@@ -30,14 +30,14 @@ class TestCircuitBreaker:
         assert cb.allow() is False
 
     def test_half_open_after_cooldown(self):
-        cb = CircuitBreaker("example.com", threshold=1, cooldown=0.1)
+        cb = CircuitBreaker("example.com", threshold=1, cooldown=0.05)
         cb.record_failure()
         assert cb.allow() is False
         time.sleep(0.15)
         assert cb.allow() is True  # HALF_OPEN
 
     def test_half_open_success_closes(self):
-        cb = CircuitBreaker("example.com", threshold=1, cooldown=0.1)
+        cb = CircuitBreaker("example.com", threshold=1, cooldown=0.05)
         cb.record_failure()
         time.sleep(0.15)
         cb.allow()  # -> HALF_OPEN

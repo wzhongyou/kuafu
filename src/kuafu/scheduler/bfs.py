@@ -8,7 +8,6 @@ import structlog
 
 from kuafu.dedup.bloom import URLDeduplicator
 from kuafu.frontier.base import URLStore
-from kuafu.frontier.url import normalize_url
 from kuafu.models import FetchResult, URLItem, URLStatus
 from kuafu.politeness.manager import PolitenessManager
 from kuafu.scheduler.base import Scheduler

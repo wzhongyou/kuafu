@@ -14,7 +14,9 @@ from pydantic import BaseModel, Field, field_validator
 from kuafu.web.crawl_manager import CrawlManager
 
 router = APIRouter()
-templates = Jinja2Templates(directory=str(__import__("pathlib").Path(__file__).parent / "templates"))
+templates = Jinja2Templates(
+    directory=str(__import__("pathlib").Path(__file__).parent / "templates")
+)
 
 
 class CrawlStartRequest(BaseModel):
@@ -88,7 +90,7 @@ async def start_crawl(request: Request, body: CrawlStartRequest) -> dict:
         await cm.start_crawl(body.url, body.max_depth, body.max_pages)
         return {"ok": True}
     except RuntimeError as e:
-        raise HTTPException(400, str(e))
+        raise HTTPException(400, str(e)) from e
 
 
 @router.post("/api/crawl/pause", tags=["crawl"])
@@ -140,9 +142,9 @@ async def build_index(request: Request, body: BuildIndexRequest) -> dict:
         result = await cm.build_vortex_index(body.vortex_url)
         return result
     except httpx.ConnectError as e:
-        raise HTTPException(502, f"Cannot connect to Vortex at {body.vortex_url}: {e}")
+        raise HTTPException(502, f"Cannot connect to Vortex at {body.vortex_url}: {e}") from e
     except (ValueError, KeyError, AttributeError, httpx.HTTPError) as e:
-        raise HTTPException(500, f"Build index failed: {e}")
+        raise HTTPException(500, f"Build index failed: {e}") from e
 
 
 # ── SSE ──

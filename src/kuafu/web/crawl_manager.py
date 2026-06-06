@@ -10,8 +10,14 @@ import structlog
 
 from kuafu.config import CrawlerConfig
 from kuafu.crawler import Crawler
-from kuafu.events import CRAWL_STARTED, CRAWL_STOPPED, PROGRESS, URL_DISCOVERED, URL_FAILED, URL_FETCHED
-from kuafu.models import CrawlResult, URLStatus
+from kuafu.events import (
+    CRAWL_STARTED,
+    CRAWL_STOPPED,
+    PROGRESS,
+    URL_FAILED,
+    URL_FETCHED,
+)
+from kuafu.models import CrawlResult
 from kuafu.pipeline.pipeline import ConsolePipeline
 from kuafu.search.transformer import transform
 from kuafu.web.event_bus import EventBus
@@ -91,8 +97,22 @@ class CrawlManager:
 
     def get_status(self) -> dict:
         """获取当前状态"""
-        elapsed = time.monotonic() - self._start_time if self._start_time and self._state != "idle" else 0
-        stats = self._crawler.stats if self._crawler else {"pages_crawled": 0, "pages_failed": 0, "urls_discovered": 0, "running": False, "paused": False}
+        elapsed = (
+            time.monotonic() - self._start_time
+            if self._start_time and self._state != "idle"
+            else 0
+        )
+        stats = (
+            self._crawler.stats
+            if self._crawler
+            else {
+                "pages_crawled": 0,
+                "pages_failed": 0,
+                "urls_discovered": 0,
+                "running": False,
+                "paused": False,
+            }
+        )
         return {
             "state": self._state,
             "seed_url": self._seed_url,

@@ -3,13 +3,12 @@
 from __future__ import annotations
 
 import json
-import re
 
 from parsel import Selector
 from yarl import URL
 
 from kuafu.fetcher.encoding import detect_encoding
-from kuafu.models import Link, ParseResult
+from kuafu.models import ParseResult
 from kuafu.parser.base import Parser
 from kuafu.parser.link import LinkExtractor
 
@@ -44,7 +43,8 @@ class HTMLParser(Parser):
         canonical = self._extract_canonical(selector, url)
         language = self._extract_language(selector)
         links = self._link_extractor.extract(selector, url) if self._extract_links else []
-        structured_data = self._extract_json_ld(selector)  # 在 _extract_text 之前，因为后者会移除 script
+        # 在 _extract_text 之前提取，因为后者会移除 script 标签
+        structured_data = self._extract_json_ld(selector)
         text_content = self._extract_text(selector)
 
         return ParseResult(

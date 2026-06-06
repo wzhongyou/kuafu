@@ -14,7 +14,7 @@ class Pipeline(ABC):
     async def process(self, result: CrawlResult) -> None:
         """处理爬取结果"""
 
-    async def close(self) -> None:
+    async def close(self) -> None:  # noqa: B027
         """清理资源"""
 
 

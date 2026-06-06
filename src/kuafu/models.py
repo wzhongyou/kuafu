@@ -7,7 +7,6 @@ from enum import IntEnum
 
 from pydantic import BaseModel, Field
 
-
 # ── URL 状态 ──────────────────────────────────────────────
 
 class URLStatus(IntEnum):
@@ -83,9 +82,7 @@ class FetchResult(BaseModel):
         """内容是否变更（基于状态码和 ETag/Last-Modified 判断）"""
         if self.status_code == 304:
             return False
-        if self.status_code >= 400:
-            return False
-        return True
+        return self.status_code < 400
 
 
 # ── 解析结果 ──────────────────────────────────────────────

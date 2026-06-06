@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import contextlib
 from collections import defaultdict
 from collections.abc import Callable, Coroutine
 from typing import Any
@@ -36,10 +37,8 @@ class EventEmitter:
         """移除事件监听器"""
         listeners = self._listeners.get(event)
         if listeners:
-            try:
+            with contextlib.suppress(ValueError):
                 listeners.remove(callback)
-            except ValueError:
-                pass
 
     def emit(self, event: str, **kwargs: Any) -> None:
         """发射事件（非阻塞，fire-and-forget）"""

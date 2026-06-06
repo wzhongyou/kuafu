@@ -3,13 +3,20 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Sequence
 
 import structlog
 
 from kuafu.config import CrawlerConfig
 from kuafu.dedup.bloom import BloomFilterDeduplicator, MemoryDeduplicator, URLDeduplicator
-from kuafu.events import CRAWL_STARTED, CRAWL_STOPPED, PROGRESS, URL_DISCOVERED, URL_FAILED, URL_FETCHED, EventEmitter
+from kuafu.events import (
+    CRAWL_STARTED,
+    CRAWL_STOPPED,
+    PROGRESS,
+    URL_DISCOVERED,
+    URL_FAILED,
+    URL_FETCHED,
+    EventEmitter,
+)
 from kuafu.fetcher.httpx_client import HttpxFetcher
 from kuafu.frontier.base import URLStore
 from kuafu.frontier.memory import MemoryURLStore
@@ -21,13 +28,13 @@ from kuafu.middleware.middleware import (
     ResponseMiddleware,
     UAMiddleware,
 )
-from kuafu.models import CrawlResult, FetchRequest, FetchResult, URLItem, URLStatus
+from kuafu.models import CrawlResult, FetchRequest, URLItem, URLStatus
 from kuafu.parser.html import HTMLParser
 from kuafu.parser.link import DomainFilter, FileTypeFilter, LinkFilter, SchemeFilter
 from kuafu.pipeline.pipeline import ConsolePipeline, Pipeline, PipelineChain
 from kuafu.politeness.manager import PolitenessManager
-from kuafu.scheduler.bfs import BFSScheduler
 from kuafu.scheduler.base import Scheduler
+from kuafu.scheduler.bfs import BFSScheduler
 
 logger = structlog.get_logger()
 
@@ -167,7 +174,9 @@ class Crawler:
             return
         if await self._dedup.seen(normalized):
             return
-        item = URLItem(raw=url, normalized=normalized, depth=0, priority=0, status=URLStatus.PENDING)
+        item = URLItem(
+            raw=url, normalized=normalized, depth=0, priority=0, status=URLStatus.PENDING
+        )
         await self._scheduler.push([item])
 
     def run_as_task(self) -> asyncio.Task:

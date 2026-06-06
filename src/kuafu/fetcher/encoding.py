@@ -6,7 +6,6 @@ import re
 
 import charset_normalizer
 
-
 # 匹配 <meta charset="...">
 _META_CHARSET_RE = re.compile(
     rb'<\s*meta[^>]+charset\s*=\s*["\']?\s*([^"\';\s>]+)', re.IGNORECASE

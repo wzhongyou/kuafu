@@ -4,12 +4,9 @@ from __future__ import annotations
 
 import asyncio
 import time
-from abc import ABC, abstractmethod
-from datetime import datetime, timedelta
 from enum import Enum
 
 from kuafu.models import FetchResult, URLItem
-
 
 # ── 断路器 ──────────────────────────────────────────────
 
@@ -264,10 +261,7 @@ class PolitenessManager:
 
         # 2. 断路器
         cb = self._get_circuit_breaker(host)
-        if not cb.allow():
-            return False
-
-        return True
+        return cb.allow()
 
     async def wait(self, host: str) -> None:
         """等待直到可以访问该 Host"""

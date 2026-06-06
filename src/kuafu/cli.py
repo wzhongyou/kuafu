@@ -36,8 +36,9 @@ def main() -> None:
 
     # Web 模式
     if args.web:
-        from kuafu.web.app import create_app
         import uvicorn
+
+        from kuafu.web.app import create_app
         uvicorn.run(create_app(), host=args.host, port=args.port)
         return
 

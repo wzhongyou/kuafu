@@ -37,13 +37,18 @@ class TestCrawlerEvents:
         crawler = Crawler(config)
         crawler._fetcher = MockFetcher()
 
+        done = asyncio.Event()
         events_received = []
         async def on_start(**kwargs):
             events_received.append("started")
+            done.set()
 
         crawler.events.on(CRAWL_STARTED, on_start)
         await crawler.run()
-        await asyncio.sleep(0.05)
+        try:
+            await asyncio.wait_for(done.wait(), timeout=2.0)
+        except asyncio.TimeoutError:
+            pass
         assert "started" in events_received
 
     @pytest.mark.asyncio
@@ -52,13 +57,18 @@ class TestCrawlerEvents:
         crawler = Crawler(config)
         crawler._fetcher = MockFetcher()
 
+        done = asyncio.Event()
         events_received = []
         async def on_stop(**kwargs):
             events_received.append("stopped")
+            done.set()
 
         crawler.events.on(CRAWL_STOPPED, on_stop)
         await crawler.run()
-        await asyncio.sleep(0.05)
+        try:
+            await asyncio.wait_for(done.wait(), timeout=2.0)
+        except asyncio.TimeoutError:
+            pass
         assert "stopped" in events_received
 
     @pytest.mark.asyncio
@@ -67,14 +77,19 @@ class TestCrawlerEvents:
         crawler = Crawler(config)
         crawler._fetcher = MockFetcher()
 
+        done = asyncio.Event()
         fetched_urls = []
         async def on_fetched(result=None, **kwargs):
             if result:
                 fetched_urls.append(result.fetch.url)
+            done.set()
 
         crawler.events.on(URL_FETCHED, on_fetched)
         await crawler.run()
-        await asyncio.sleep(0.05)
+        try:
+            await asyncio.wait_for(done.wait(), timeout=2.0)
+        except asyncio.TimeoutError:
+            pass
         assert "https://example.com" in fetched_urls
 
     @pytest.mark.asyncio

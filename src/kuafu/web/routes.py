@@ -57,7 +57,7 @@ def _get_cm(request: Request) -> CrawlManager:
 
 @router.get("/", response_class=HTMLResponse, tags=["pages"])
 async def index(request: Request) -> HTMLResponse:
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request, "index.html")
 
 
 @router.get("/detail", response_class=HTMLResponse, tags=["pages"])
@@ -68,10 +68,9 @@ async def detail(request: Request, url: str = "") -> HTMLResponse:
     result = cm.get_result(url)
     if not result:
         raise HTTPException(404, "Page not found in crawl results")
-    return templates.TemplateResponse("detail.html", {
-        "request": request,
-        "result": result,
-    })
+    return templates.TemplateResponse(
+        request, "detail.html", {"result": result}
+    )
 
 
 # ── REST API ──
